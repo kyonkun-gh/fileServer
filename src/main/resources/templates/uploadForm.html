@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>myHFS</title>
+    <link th:href="@{/styles/css.css}" rel="stylesheet" />
+</head>
+<body>
+    <div th:if="${message}">
+        <h2 th:text="${message}"></h2>
+    </div>
+
+    <div>
+        <form method="post" enctype="multipart/form-data" action="/">
+            File to upload:
+            <input type="file" name="file" />
+            <input type="submit" value="Upload" />
+        </form>
+    </div>
+
+    <hr />
+    <div>
+        <table>
+            <tr>
+                <th>檔案名稱</th>
+                <th>檔案大小</th>
+                <th>最後修改日期</th>
+            </tr>
+            <tr th:each="file : ${files}">
+                <td> <a th:href="${file.downloadUri}" th:text="${file.fileName}"></a> </td>
+                <td th:text="${file.fileSize}"></td>
+                <td th:text="${file.fileTime}"></td>
+            </tr>
+        </table>
+    </div>
+</body>
+</html>
