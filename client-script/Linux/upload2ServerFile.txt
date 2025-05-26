@@ -1,0 +1,2 @@
+/root/bakup{MONTH}.tar.xz
+/var/log/backup{MONTH}.tar.xz
