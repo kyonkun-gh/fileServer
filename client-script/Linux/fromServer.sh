@@ -7,6 +7,31 @@ shellPath=$(dirname $0)
 source "${shellPath}/my.conf"
 url="${PROTOCOL}${REMOTE_HOST}:${PORT}/"
 
+errorCount=0
+if [ -z ${PROTOCOL} ]; then
+	echo -e "${COLOR_ERROR}PROTOCOL not set, please check!${COLOR_RESET}"
+	errorCount=$((errorCount+1))
+fi
+if [ -z ${REMOTE_HOST} ]; then
+	echo -e "${COLOR_ERROR}REMOTE_HOST not set, please check!${COLOR_RESET}"
+	errorCount=$((errorCount+1))
+fi
+if [ -z ${PORT} ]; then
+	echo -e "${COLOR_ERROR}PORT not set, please check!${COLOR_RESET}"
+	errorCount=$((errorCount+1))
+fi
+if [ ${errorCount} -gt 0 ]; then
+	echo -e "${COLOR_ERROR}Configure has some error, please check!${COLOR_RESET}"
+	exit 1
+fi
+
+
+nc -z ${REMOTE_HOST} ${PORT}
+if [ ! $? -eq 0 ]; then
+	echo -e "${COLOR_ERROR}${url}${COLOR_RESET} is not open, please check!"
+	exit 1
+fi
+
 
 declare -a fileNames
 declare -a fileSizes
@@ -33,14 +58,13 @@ if [ ${length} -eq 0 ]; then
 fi
 
 while true; do
+	clear
 	printf "%-1s %-5s %-50s %-12s %-20s\n" " " "Num" "File Name" "File Size" "Last Modified Time"
 	for ((i=0; i<${length}; i++)); do
 		if [ ${isSelected[i]} -eq "0" ]; then
 			printf "%-1s %-5s %-50s %-12s %-20s\n" " " "${i}." "${fileNames[i]}" "${fileSizes[i]}" "${fileTimes[i]}"
-			#echo "  ${i}. ${fileNames[i]}"
 		else
 			printf "%-1s %-5s %-50s %-12s %-20s\n" "*" "${i}." "${fileNames[i]}" "${fileSizes[i]}" "${fileTimes[i]}"
-			#echo "* ${i}. ${fileNames[i]}"
 		fi
 	done
 
@@ -62,9 +86,6 @@ while true; do
 			fi
 		done
 		unset IFS
-		#if [ "${choice}" -lt ${length} ]; then
-			#isSelected[${choice}]=$((isSelected[${choice}] ^ 1))
-		#fi
 	else
 		echo -e "${COLOR_ERROR}Not a valid input. ${COLOR_RESET}"
 	fi
