@@ -4,7 +4,8 @@
 txtFilePath="upload2ServerFile.txt"
 
 #Dynamic Variable
-shellPath=$(dirname $0)
+realPath=$(realpath "$0")
+shellPath=$(dirname "${realPath}")
 
 #Load conf data
 source ${shellPath}/my.conf
