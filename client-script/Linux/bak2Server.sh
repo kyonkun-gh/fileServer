@@ -10,7 +10,14 @@ shellPath=$(dirname "${realPath}")
 #Load conf data
 source ${shellPath}/my.conf
 url="${PROTOCOL}${REMOTE_HOST}:${PORT}/"
-lastMonth=`date --date="$(date +%Y-%m-15) -1 month" "+%m"`
+#lastMonth=$(date --date="$(date +%Y-%m-15) -1 month" "+%m")
+lastMonth=$(date "+%m")
+lastMonth=$((10#${lastMonth}-1))
+if [ ${lastMonth} -eq 0 ]; then
+	lastMonth=12
+elif [ ${lastMonth} -lt 10 ]; then
+	lastMonth="0${lastMonth}"
+fi
 filePaths=()
 
 errorCount=0
